@@ -1,12 +1,21 @@
+local is_windows = vim.fn.has("win32") == 1
+
+-- Servers that work reliably on all platforms (binary installs, no Node/Python needed)
+local base_servers = { "lua_ls", "rust_analyzer", "powershell_es" }
+
+-- Servers that require Node.js — skip auto-install on Windows if Node is absent
+local node_servers = vim.fn.executable("node") == 1
+  and { "pyright", "bashls", "yamlls", "dockerls", "jsonls" }
+  or  {}
+
+local all_servers = vim.list_extend(vim.deepcopy(base_servers), node_servers)
+
 return {
   { "williamboman/mason.nvim", opts = {} },
   {
     "williamboman/mason-lspconfig.nvim",
     opts = {
-      ensure_installed = {
-        "lua_ls", "rust_analyzer", "pyright", "powershell_es",
-        "bashls", "yamlls", "dockerls", "jsonls",
-      },
+      ensure_installed     = all_servers,
       automatic_installation = false,
     },
   },
@@ -56,10 +65,7 @@ return {
       vim.lsp.enable("stylua", false)
 
       -- Enable servers. Add more here after installing via :Mason
-      vim.lsp.enable({
-        "lua_ls", "rust_analyzer", "pyright", "powershell_es",
-        "bashls", "yamlls", "dockerls", "jsonls",
-      })
+      vim.lsp.enable(all_servers)
     end,
   },
 }
