@@ -99,20 +99,21 @@ local function send_to_terminal(text)
   end
 end
 
--- <leader>rr — run current line
+-- <leader>rr — run current line in pwsh
 map("n", "<leader>rr", function()
-  send_to_terminal(vim.api.nvim_get_current_line())
-end, { desc = "Run line in terminal" })
+  local line = vim.api.nvim_get_current_line()
+  send_to_terminal("pwsh -NoProfile -Command " .. vim.fn.shellescape(line))
+end, { desc = "Run line in PowerShell" })
 
--- <leader>rr — run visual selection (dot-sources a temp .ps1 file)
+-- <leader>rr — run visual selection in pwsh via temp .ps1 file
 map("v", "<leader>rr", function()
   local s     = vim.fn.getpos("'<")
   local e     = vim.fn.getpos("'>")
   local lines = vim.api.nvim_buf_get_lines(0, s[2] - 1, e[2], false)
   local tmp   = vim.fn.tempname() .. ".ps1"
   vim.fn.writefile(lines, tmp)
-  send_to_terminal(". '" .. tmp .. "'")
-end, { desc = "Run selection in terminal" })
+  send_to_terminal("pwsh -NoProfile -File " .. vim.fn.shellescape(tmp))
+end, { desc = "Run selection in PowerShell" })
 
 -- Diagnostics
 map("n", "[d", vim.diagnostic.goto_prev,  { desc = "Prev diagnostic" })

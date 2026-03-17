@@ -7,7 +7,7 @@ return {
         "lua_ls", "rust_analyzer", "pyright", "powershell_es",
         "bashls", "yamlls", "dockerls", "jsonls",
       },
-      automatic_installation = true,
+      automatic_installation = false,
     },
   },
 
@@ -51,6 +51,9 @@ return {
           },
         },
       })
+
+      -- Disable servers that nvim-lspconfig registers but we don't want
+      vim.lsp.enable("stylua", false)
 
       -- Enable servers. Add more here after installing via :Mason
       vim.lsp.enable({
