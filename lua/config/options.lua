@@ -1,4 +1,5 @@
-local opt = vim.opt
+local opt      = vim.opt
+local platform = require("config.platform")
 
 -- Line numbers
 opt.number = true
@@ -32,6 +33,14 @@ opt.updatetime = 250
 opt.timeoutlen = 300
 opt.clipboard = "unnamedplus"
 opt.mouse = "a"
+
+-- Windows: use pwsh as shell so :terminal and ! commands use PowerShell
+if platform.is_windows then
+  opt.shell      = "pwsh"
+  opt.shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command"
+  opt.shellquote = ""
+  opt.shellxquote = ""
+end
 
 -- Use a decent built-in colorscheme (no plugin needed)
 vim.cmd.colorscheme("habamax")

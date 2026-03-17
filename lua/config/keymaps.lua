@@ -1,4 +1,5 @@
-local map = vim.keymap.set
+local map        = vim.keymap.set
+local is_windows = vim.fn.has("win32") == 1
 
 -- Window navigation
 map("n", "<C-h>", "<C-w>h", { desc = "Window left" })
@@ -65,8 +66,8 @@ local function toggle_terminal()
     vim.cmd("startinsert")
     return
   end
-  -- Create fresh terminal
-  vim.cmd("botright 35split | terminal")
+  -- Create fresh terminal (use pwsh on Windows, default shell elsewhere)
+  vim.cmd("botright 35split | terminal" .. (is_windows and " pwsh" or ""))
   term_buf = vim.api.nvim_get_current_buf()
   term_win = vim.api.nvim_get_current_win()
   vim.cmd("startinsert")
