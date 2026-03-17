@@ -1,0 +1,5 @@
+# Plugin data (managed by lazy.nvim, not needed in repo)
+lazy-lock.json
+
+# Treesitter compiled parsers
+parser/
