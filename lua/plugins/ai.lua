@@ -1,6 +1,7 @@
 return {
   {
     "olimorris/codecompanion.nvim",
+    cond = function() return vim.fn.executable("ollama") == 1 end,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
