@@ -1,45 +1,62 @@
+local ollama_ok = vim.fn.executable("ollama") == 1
+
+local deps = {
+  "hrsh7th/cmp-nvim-lsp",
+  "hrsh7th/cmp-buffer",
+  "hrsh7th/cmp-path",
+  "L3MON4D3/LuaSnip",
+  "saadparwaiz1/cmp_luasnip",
+  "rafamadriz/friendly-snippets",
+}
+
+if ollama_ok then
+  table.insert(deps, {
+    "tzachar/cmp-ai",
+    config = function()
+      require("cmp_ai.config"):setup({
+        max_lines              = 50,
+        provider               = "Ollama",
+        provider_options       = {
+          model  = "qwen2.5-coder:7b",
+          -- qwen2.5-coder uses its own FIM tokens (not CodeLlama's <PRE>/<SUF>/<MID>)
+          prompt = function(lines_before, lines_after)
+            return "<|fim_prefix|>" .. lines_before
+                .. "<|fim_suffix|>" .. lines_after
+                .. "<|fim_middle|>"
+          end,
+          options = {
+            temperature = 0,
+            num_predict = 80,
+            stop        = { "<|endoftext|>", "<|fim_pad|>" },
+          },
+        },
+        notify                 = false,
+        run_on_every_keystroke = true,
+      })
+      require("cmp_ai").setup()
+    end,
+  })
+end
+
 return {
   {
     "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "L3MON4D3/LuaSnip",
-      "saadparwaiz1/cmp_luasnip",
-      "rafamadriz/friendly-snippets",
-      {
-        "tzachar/cmp-ai",
-        config = function()
-          require("cmp_ai.config"):setup({
-            max_lines              = 50,
-            provider               = "Ollama",
-            provider_options       = {
-              model  = "qwen2.5-coder:7b",
-              -- qwen2.5-coder uses its own FIM tokens (not CodeLlama's <PRE>/<SUF>/<MID>)
-              prompt = function(lines_before, lines_after)
-                return "<|fim_prefix|>" .. lines_before
-                    .. "<|fim_suffix|>" .. lines_after
-                    .. "<|fim_middle|>"
-              end,
-              options = {
-                temperature = 0,
-                num_predict = 80,
-                stop        = { "<|endoftext|>", "<|fim_pad|>" },
-              },
-            },
-            notify                 = false,
-            run_on_every_keystroke = true,
-          })
-          require("cmp_ai").setup()
-        end,
-      },
-    },
+    dependencies = deps,
     config = function()
       local cmp     = require("cmp")
       local luasnip = require("luasnip")
 
       require("luasnip.loaders.from_vscode").lazy_load()
+
+      local sources = {
+        { name = "nvim_lsp" },
+        { name = "luasnip" },
+        { name = "buffer" },
+        { name = "path" },
+      }
+      if ollama_ok then
+        table.insert(sources, 3, { name = "cmp_ai" })
+      end
 
       cmp.setup({
         snippet = {
@@ -74,13 +91,7 @@ return {
             end
           end, { "i", "s" }),
         }),
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "cmp_ai" },
-          { name = "buffer" },
-          { name = "path" },
-        }),
+        sources = cmp.config.sources(sources),
       })
     end,
   },
