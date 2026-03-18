@@ -45,4 +45,40 @@ return {
     event = "VeryLazy",
     opts = {},
   },
+
+  -- Indent guides
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {},
+  },
+
+  -- Highlight other occurrences of word under cursor
+  {
+    "RRethy/vim-illuminate",
+    event = "VeryLazy",
+    opts = { delay = 200 },
+    config = function(_, opts)
+      require("illuminate").configure(opts)
+    end,
+  },
+
+  -- Better folding via LSP/Treesitter
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = { "kevinhwang91/promise-async" },
+    config = function()
+      vim.o.foldcolumn = "1"
+      vim.o.foldlevel = 99
+      vim.o.foldlevelstart = 99
+      vim.o.foldenable = true
+      require("ufo").setup({
+        provider_selector = function()
+          return { "lsp", "indent" }
+        end,
+      })
+      vim.keymap.set("n", "zR", require("ufo").openAllFolds,  { desc = "Open all folds" })
+      vim.keymap.set("n", "zM", require("ufo").closeAllFolds, { desc = "Close all folds" })
+    end,
+  },
 }
