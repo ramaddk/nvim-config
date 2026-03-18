@@ -43,7 +43,7 @@ if platform.is_windows then
 end
 
 -- Use a decent built-in colorscheme (no plugin needed)
-vim.cmd.colorscheme("habamax")
+vim.cmd.colorscheme("gruvbox")
 
 -- Open Telescope find_files when launched with no arguments
 vim.api.nvim_create_autocmd("VimEnter", {

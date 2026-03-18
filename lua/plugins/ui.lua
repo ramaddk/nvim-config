@@ -1,4 +1,10 @@
 return {
+  -- Colorscheme
+  {
+    "ellisonleao/gruvbox.nvim",
+    priority = 1000,
+    config = true,
+  },
   -- Statusline
   {
     "nvim-lualine/lualine.nvim",
