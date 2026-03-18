@@ -7,6 +7,21 @@ return {
       vim.cmd.colorscheme("gruvbox")
     end,
   },
+  -- Buffer tabs
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      options = {
+        diagnostics = "nvim_lsp",
+        offsets = {
+          { filetype = "neo-tree", text = "Files", highlight = "Directory" },
+        },
+      },
+    },
+  },
+
   -- Statusline
   {
     "nvim-lualine/lualine.nvim",
