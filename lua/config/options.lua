@@ -42,8 +42,7 @@ if platform.is_windows then
   opt.shellxquote = ""
 end
 
--- Use a decent built-in colorscheme (no plugin needed)
-vim.cmd.colorscheme("gruvbox")
+-- Colorscheme is set in plugins/ui.lua after lazy loads gruvbox.nvim
 
 -- Open Telescope find_files when launched with no arguments
 vim.api.nvim_create_autocmd("VimEnter", {
