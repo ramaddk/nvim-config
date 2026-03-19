@@ -103,7 +103,12 @@ end
 -- <leader>rr — run current line in pwsh
 map("n", "<leader>rr", function()
   local line = vim.api.nvim_get_current_line()
-  send_to_terminal("pwsh -NoProfile -Command " .. vim.fn.shellescape(line))
+  if is_windows then
+    -- Terminal is already running pwsh — send line directly to avoid quoting issues
+    send_to_terminal(line)
+  else
+    send_to_terminal("pwsh -NoProfile -Command " .. vim.fn.shellescape(line))
+  end
 end, { desc = "Run line in PowerShell" })
 
 -- <leader>rr — run visual selection in pwsh via temp .ps1 file
@@ -113,7 +118,12 @@ map("v", "<leader>rr", function()
   local lines = vim.api.nvim_buf_get_lines(0, s[2] - 1, e[2], false)
   local tmp   = vim.fn.tempname() .. ".ps1"
   vim.fn.writefile(lines, tmp)
-  send_to_terminal("pwsh -NoProfile -File " .. vim.fn.shellescape(tmp))
+  if is_windows then
+    -- Dot-source the file so variables remain in scope; single-quote the path for pwsh
+    send_to_terminal(". '" .. tmp:gsub("'", "''") .. "'")
+  else
+    send_to_terminal("pwsh -NoProfile -File " .. vim.fn.shellescape(tmp))
+  end
 end, { desc = "Run selection in PowerShell" })
 
 -- Diagnostics

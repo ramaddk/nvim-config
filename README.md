@@ -14,7 +14,7 @@ No LazyVim or other meta-distros — just the plugins I actually use.
 ## Installation
 
 ```bash
-git clone <your-repo-url> ~/.config/nvim
+git clone git@github.com:ramaddk/nvim-config.git ~/.config/nvim
 nvim  # plugins install automatically on first launch
 ```
 
