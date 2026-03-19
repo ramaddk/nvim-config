@@ -92,7 +92,7 @@ local function send_to_terminal(text)
   end
   local chan = vim.b[term_buf].terminal_job_id
   if chan then
-    vim.fn.chansend(chan, text .. "\n")
+    vim.fn.chansend(chan, text .. "\r\n")
     -- Scroll terminal to bottom
     if term_win and vim.api.nvim_win_is_valid(term_win) then
       vim.api.nvim_win_call(term_win, function() vim.cmd("normal! G") end)
@@ -125,6 +125,21 @@ map("v", "<leader>rr", function()
     send_to_terminal("pwsh -NoProfile -File " .. vim.fn.shellescape(tmp))
   end
 end, { desc = "Run selection in PowerShell" })
+
+-- <leader>RR — run entire file in pwsh
+map("n", "<leader>RR", function()
+  local filepath = vim.api.nvim_buf_get_name(0)
+  if filepath == "" then
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    filepath = vim.fn.tempname() .. ".ps1"
+    vim.fn.writefile(lines, filepath)
+  end
+  if is_windows then
+    send_to_terminal(". '" .. filepath:gsub("'", "''") .. "'")
+  else
+    send_to_terminal("pwsh -NoProfile -File " .. vim.fn.shellescape(filepath))
+  end
+end, { desc = "Run file in PowerShell" })
 
 -- Diagnostics
 map("n", "[d", vim.diagnostic.goto_prev,  { desc = "Prev diagnostic" })

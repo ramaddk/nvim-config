@@ -111,6 +111,7 @@ Change the model in `lua/plugins/ai.lua`.
 | `<leader>t` | Toggle terminal (35 lines) |
 | `<leader>rr` | Run current line in PowerShell |
 | `<leader>rr` | Run selection in PowerShell (visual) |
+|| `<leader>RR` | Run entire file in PowerShell |
 
 ### Editor
 | Key | Action |
