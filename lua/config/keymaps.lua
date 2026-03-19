@@ -100,11 +100,19 @@ local function send_to_terminal(text)
   end
 end
 
+local function assert_ps1()
+  if vim.bo.filetype ~= "ps1" then
+    vim.notify("Not a PowerShell file", vim.log.levels.WARN)
+    return false
+  end
+  return true
+end
+
 -- <leader>rr — run current line in pwsh
 map("n", "<leader>rr", function()
+  if not assert_ps1() then return end
   local line = vim.api.nvim_get_current_line()
   if is_windows then
-    -- Terminal is already running pwsh — send line directly to avoid quoting issues
     send_to_terminal(line)
   else
     send_to_terminal("pwsh -NoProfile -Command " .. vim.fn.shellescape(line))
@@ -113,26 +121,29 @@ end, { desc = "Run line in PowerShell" })
 
 -- <leader>rr — run visual selection in pwsh via temp .ps1 file
 map("v", "<leader>rr", function()
+  if not assert_ps1() then return end
   local s     = vim.fn.getpos("'<")
   local e     = vim.fn.getpos("'>")
   local lines = vim.api.nvim_buf_get_lines(0, s[2] - 1, e[2], false)
   local tmp   = vim.fn.tempname() .. ".ps1"
   vim.fn.writefile(lines, tmp)
   if is_windows then
-    -- Dot-source the file so variables remain in scope; single-quote the path for pwsh
     send_to_terminal(". '" .. tmp:gsub("'", "''") .. "'")
   else
     send_to_terminal("pwsh -NoProfile -File " .. vim.fn.shellescape(tmp))
   end
 end, { desc = "Run selection in PowerShell" })
 
--- <leader>RR — run entire file in pwsh
+-- <leader>RR — save and run entire file in pwsh
 map("n", "<leader>RR", function()
+  if not assert_ps1() then return end
   local filepath = vim.api.nvim_buf_get_name(0)
   if filepath == "" then
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
     filepath = vim.fn.tempname() .. ".ps1"
     vim.fn.writefile(lines, filepath)
+  else
+    vim.cmd("silent write")
   end
   if is_windows then
     send_to_terminal(". '" .. filepath:gsub("'", "''") .. "'")
@@ -140,6 +151,14 @@ map("n", "<leader>RR", function()
     send_to_terminal("pwsh -NoProfile -File " .. vim.fn.shellescape(filepath))
   end
 end, { desc = "Run file in PowerShell" })
+
+-- <leader>rx — stop running script (Ctrl+C)
+map("n", "<leader>rx", function()
+  if term_buf and vim.api.nvim_buf_is_valid(term_buf) then
+    local chan = vim.b[term_buf].terminal_job_id
+    if chan then vim.fn.chansend(chan, "\x03") end
+  end
+end, { desc = "Stop PowerShell script" })
 
 -- Diagnostics
 map("n", "[d", vim.diagnostic.goto_prev,  { desc = "Prev diagnostic" })
