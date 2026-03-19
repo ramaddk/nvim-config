@@ -152,8 +152,8 @@ map("n", "<leader>RR", function()
   end
 end, { desc = "Run file in PowerShell" })
 
--- <leader>rx — stop running script (Ctrl+C)
-map("n", "<leader>rx", function()
+-- <leader>rc — stop running script (Ctrl+C)
+map("n", "<leader>rc", function()
   if term_buf and vim.api.nvim_buf_is_valid(term_buf) then
     local chan = vim.b[term_buf].terminal_job_id
     if chan then vim.fn.chansend(chan, "\x03") end

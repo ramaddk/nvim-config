@@ -112,7 +112,7 @@ Change the model in `lua/plugins/ai.lua`.
 | `<leader>rr` | Run current line in PowerShell |
 | `<leader>rr` | Run selection in PowerShell (visual) |
 | `<leader>RR` | Run entire file in PowerShell |
-| `<leader>rx` | Stop running script (Ctrl+C) |
+| `<leader>rc` | Stop running script (Ctrl+C) |
 
 ### Editor
 | Key | Action |
