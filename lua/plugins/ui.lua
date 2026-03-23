@@ -1,12 +1,4 @@
 return {
-  -- Colorscheme
-  {
-    "ellisonleao/gruvbox.nvim",
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme("gruvbox")
-    end,
-  },
   -- Statusline
   {
     "nvim-lualine/lualine.nvim",

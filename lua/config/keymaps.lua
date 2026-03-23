@@ -100,57 +100,74 @@ local function send_to_terminal(text)
   end
 end
 
-local function assert_ps1()
-  if vim.bo.filetype ~= "ps1" then
-    vim.notify("Not a PowerShell file", vim.log.levels.WARN)
-    return false
+-- Runners by filetype
+local runners = {
+  ps1 = {
+    line_cmd = function(line)
+      return is_windows
+        and line
+        or ("pwsh -NoProfile -Command " .. vim.fn.shellescape(line))
+    end,
+    file_cmd = function(path)
+      return is_windows
+        and (". '" .. path:gsub("'", "''") .. "'")
+        or ("pwsh -NoProfile -File " .. vim.fn.shellescape(path))
+    end,
+    tmp_ext = ".ps1",
+  },
+  python = {
+    line_cmd = function(line)
+      return "python3 -c " .. vim.fn.shellescape(line)
+    end,
+    file_cmd = function(path)
+      return "python3 " .. vim.fn.shellescape(path)
+    end,
+    tmp_ext = ".py",
+  },
+}
+
+local function get_runner()
+  local ft = vim.bo.filetype
+  local r = runners[ft]
+  if not r then
+    vim.notify("No runner for filetype: " .. ft, vim.log.levels.WARN)
   end
-  return true
+  return r
 end
 
--- <leader>rr — run current line in pwsh
+-- <leader>rr — run current line
 map("n", "<leader>rr", function()
-  if not assert_ps1() then return end
-  local line = vim.api.nvim_get_current_line()
-  if is_windows then
-    send_to_terminal(line)
-  else
-    send_to_terminal("pwsh -NoProfile -Command " .. vim.fn.shellescape(line))
-  end
-end, { desc = "Run line in PowerShell" })
+  local r = get_runner()
+  if not r then return end
+  send_to_terminal(r.line_cmd(vim.api.nvim_get_current_line()))
+end, { desc = "Run line" })
 
--- <leader>rr — run visual selection in pwsh via temp .ps1 file
+-- <leader>rr — run visual selection via temp file
 map("v", "<leader>rr", function()
-  if not assert_ps1() then return end
+  local r = get_runner()
+  if not r then return end
   local s     = vim.fn.getpos("'<")
   local e     = vim.fn.getpos("'>")
   local lines = vim.api.nvim_buf_get_lines(0, s[2] - 1, e[2], false)
-  local tmp   = vim.fn.tempname() .. ".ps1"
+  local tmp   = vim.fn.tempname() .. r.tmp_ext
   vim.fn.writefile(lines, tmp)
-  if is_windows then
-    send_to_terminal(". '" .. tmp:gsub("'", "''") .. "'")
-  else
-    send_to_terminal("pwsh -NoProfile -File " .. vim.fn.shellescape(tmp))
-  end
-end, { desc = "Run selection in PowerShell" })
+  send_to_terminal(r.file_cmd(tmp))
+end, { desc = "Run selection" })
 
--- <leader>RR — save and run entire file in pwsh
+-- <leader>RR — save and run entire file
 map("n", "<leader>RR", function()
-  if not assert_ps1() then return end
+  local r = get_runner()
+  if not r then return end
   local filepath = vim.api.nvim_buf_get_name(0)
   if filepath == "" then
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-    filepath = vim.fn.tempname() .. ".ps1"
+    filepath = vim.fn.tempname() .. r.tmp_ext
     vim.fn.writefile(lines, filepath)
   else
     vim.cmd("silent write")
   end
-  if is_windows then
-    send_to_terminal(". '" .. filepath:gsub("'", "''") .. "'")
-  else
-    send_to_terminal("pwsh -NoProfile -File " .. vim.fn.shellescape(filepath))
-  end
-end, { desc = "Run file in PowerShell" })
+  send_to_terminal(r.file_cmd(filepath))
+end, { desc = "Run file" })
 
 -- <leader>rc — stop running script (Ctrl+C)
 map("n", "<leader>rc", function()

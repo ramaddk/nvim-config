@@ -42,7 +42,7 @@ if platform.is_windows then
   opt.shellxquote = ""
 end
 
--- Colorscheme is set in plugins/ui.lua after lazy loads gruvbox.nvim
+vim.cmd.colorscheme("habamax")
 
 -- Open Telescope find_files when launched with no arguments
 vim.api.nvim_create_autocmd("VimEnter", {
