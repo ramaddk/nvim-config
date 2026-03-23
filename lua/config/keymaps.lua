@@ -169,14 +169,6 @@ map("n", "<leader>RR", function()
   send_to_terminal(r.file_cmd(filepath))
 end, { desc = "Run file" })
 
--- <leader>rc — stop running script (Ctrl+C)
-map("n", "<leader>rc", function()
-  if term_buf and vim.api.nvim_buf_is_valid(term_buf) then
-    local chan = vim.b[term_buf].terminal_job_id
-    if chan then vim.fn.chansend(chan, "\x03") end
-  end
-end, { desc = "Stop PowerShell script" })
-
 -- Diagnostics
 map("n", "[d", vim.diagnostic.goto_prev,  { desc = "Prev diagnostic" })
 map("n", "]d", vim.diagnostic.goto_next,  { desc = "Next diagnostic" })
