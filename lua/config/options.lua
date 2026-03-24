@@ -1,4 +1,4 @@
-local opt      = vim.opt
+local opt = vim.opt
 local platform = require("config.platform")
 
 -- Line numbers
@@ -6,8 +6,8 @@ opt.number = true
 opt.relativenumber = true
 
 -- Indentation
-opt.tabstop = 2
-opt.shiftwidth = 2
+opt.tabstop = 4
+opt.shiftwidth = 4
 opt.expandtab = true
 opt.smartindent = true
 
@@ -36,21 +36,21 @@ opt.mouse = "a"
 
 -- Windows: use pwsh as shell so :terminal and ! commands use PowerShell
 if platform.is_windows then
-  opt.shell      = "pwsh"
-  opt.shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command"
-  opt.shellquote = ""
-  opt.shellxquote = ""
+	opt.shell = "pwsh"
+	opt.shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command"
+	opt.shellquote = ""
+	opt.shellxquote = ""
 end
 
 vim.cmd.colorscheme("habamax")
 
 -- Open Telescope find_files when launched with no arguments
 vim.api.nvim_create_autocmd("VimEnter", {
-  callback = function()
-    if vim.fn.argc() == 0 then
-      vim.schedule(function()
-        require("telescope.builtin").find_files()
-      end)
-    end
-  end,
+	callback = function()
+		if vim.fn.argc() == 0 then
+			vim.schedule(function()
+				require("telescope.builtin").find_files()
+			end)
+		end
+	end,
 })

@@ -14,7 +14,7 @@ return {
               schema = {
                 model = {
                   -- Change to any model from: ollama list
-                  default = "qwen2.5-coder:7b",
+                  default = "qwen3-coder:30b",
                 },
               },
             })
