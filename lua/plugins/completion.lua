@@ -17,7 +17,7 @@ if ollama_ok then
         max_lines              = 50,
         provider               = "Ollama",
         provider_options       = {
-          model  = "qwen3-coder:30b",
+          model  = "qwen2.5-coder:7b",
           -- qwen3-coder uses the same FIM tokens as qwen2.5-coder
           prompt = function(lines_before, lines_after)
             return "<|fim_prefix|>" .. lines_before
