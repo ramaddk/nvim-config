@@ -81,4 +81,22 @@ return {
       vim.keymap.set("n", "zM", require("ufo").closeAllFolds, { desc = "Close all folds" })
     end,
   },
+
+  -- Smooth motion animations
+  {
+    "josstei/whisk.nvim",
+    event = "VeryLazy",
+    opts = {
+      cursor = {
+        duration = 150,
+        easing = "ease-out",
+        enabled = true,
+      },
+      scroll = {
+        duration = 200,
+        easing = "ease-in-out",
+        enabled = true,
+      },
+    },
+  },
 }
