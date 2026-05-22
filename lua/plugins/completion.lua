@@ -18,19 +18,15 @@ if ollama_ok then
         provider               = "Ollama",
         provider_options       = {
           model  = "qwen2.5-coder:7b",
-          -- qwen3-coder uses the same FIM tokens as qwen2.5-coder
-          prompt = function(lines_before, lines_after)
-            return "<|fim_prefix|>" .. lines_before
-                .. "<|fim_suffix|>" .. lines_after
-                .. "<|fim_middle|>"
-          end,
+          prompt = function(lines_before, _) return lines_before end,
+          suffix = function(lines_after) return lines_after end,
           options = {
             temperature = 0,
             num_predict = 80,
             stop        = { "<|endoftext|>", "<|fim_pad|>" },
           },
         },
-        notify                 = false,
+        notify                 = true,
         run_on_every_keystroke = true,
       })
       require("cmp_ai").setup()
@@ -55,7 +51,7 @@ return {
         { name = "path" },
       }
       if ollama_ok then
-        table.insert(sources, 3, { name = "cmp_ai" })
+        table.insert(sources, 3, { name = "cmp_ai", keyword_length = 0 })
       end
 
       cmp.setup({
