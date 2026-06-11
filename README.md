@@ -7,7 +7,7 @@ No LazyVim or other meta-distros — just the plugins I actually use.
 
 - Neovim >= 0.11
 - [lazy.nvim](https://github.com/folke/lazy.nvim) (auto-bootstrapped on first launch)
-- [Ollama](https://ollama.com) (for AI features — optional)
+- [GitHub Copilot](https://github.com/features/copilot) (for AI chat/completions)
 - [lazygit](https://github.com/jesseduffield/lazygit) (`brew install lazygit`)
 - A [Nerd Font](https://www.nerdfonts.com) set in your terminal (for icons)
 
@@ -28,8 +28,9 @@ Install formatters via `:Mason`: `stylua`, `black`, `prettier`, `shfmt`
 | [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) | LSP support |
 | [mason.nvim](https://github.com/williamboman/mason.nvim) | LSP/formatter installer |
 | [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) | Autocomplete |
-| [cmp-ai](https://github.com/tzachar/cmp-ai) | AI completions via Ollama |
-| [codecompanion.nvim](https://github.com/olimorris/codecompanion.nvim) | AI chat + inline assist |
+| [copilot.lua](https://github.com/zbirenbaum/copilot.lua) | GitHub Copilot integration |
+| [copilot-cmp](https://github.com/zbirenbaum/copilot-cmp) | Copilot FIM in nvim-cmp |
+| [CopilotChat.nvim](https://github.com/CopilotC-Nvim/CopilotChat.nvim) | AI chat + prompt actions |
 | [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) | Fuzzy finder |
 | [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | Syntax highlighting |
 | [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim) | File explorer |
@@ -92,8 +93,8 @@ Add more via `:Mason`.
 | `<leader>ac` | AI actions menu |
 | `<leader>aa` | Add selection to chat (visual) |
 
-AI uses [Ollama](https://ollama.com) locally with `qwen2.5-coder:7b` by default.
-Change the model in `lua/plugins/ai.lua`.
+AI uses GitHub Copilot via `copilot.lua`, `copilot-cmp`, and `CopilotChat.nvim`.
+Run `:Copilot auth` in Neovim to sign in.
 
 ### Git
 | Key | Action |
@@ -136,8 +137,8 @@ Change the model in `lua/plugins/ai.lua`.
     │   ├── options.lua    # Editor settings
     │   └── keymaps.lua    # All keymaps
     └── plugins/
-        ├── ai.lua         # codecompanion + Ollama
-        ├── completion.lua # nvim-cmp + cmp-ai
+        ├── ai.lua         # CopilotChat + copilot.lua
+        ├── completion.lua # nvim-cmp + copilot-cmp
         ├── editor.lua     # autopairs, comments, gitsigns, surround
         ├── format.lua     # conform.nvim
         ├── lsp.lua        # LSP + Mason
