@@ -9,6 +9,28 @@ return {
     },
   },
   {
+    "creeper5820/opencode.nvim",
+    cmd = {
+      "OpenCode",
+      "OpenCodeToggle",
+      "OpenCodeOpen",
+    },
+    keys = {
+      {
+        "<leader>ao",
+        "<cmd>OpenCodeToggle<cr>",
+        desc = "OpenCode",
+      },
+    },
+    opts = {
+      keymaps = {
+        toggle = false,
+        send_selection = "<leader>os",
+        question_selection = "<leader>oq",
+      },
+    },
+  },
+  {
     "CopilotC-Nvim/CopilotChat.nvim",
     dependencies = {
       "zbirenbaum/copilot.lua",

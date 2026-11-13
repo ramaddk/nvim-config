@@ -22,7 +22,7 @@ opt.signcolumn = "auto"
 opt.cursorline = true
 opt.wrap = false
 opt.fillchars = { eob = " " }
-opt.scrolloff = 8
+opt.scrolloff = 15
 opt.sidescrolloff = 8
 
 -- Behaviour
