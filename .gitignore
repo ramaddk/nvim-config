@@ -3,3 +3,6 @@ lazy-lock.json
 
 # Treesitter compiled parsers
 parser/
+
+# Editor backup files
+*.bak
